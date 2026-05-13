@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movie Recommender</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #111;
+            color: white;
+            text-align: center;
+        }
+
+        input {
+            padding: 10px;
+            width: 300px;
+            margin: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: red;
+            color: white;
+            border: none;
+        }
+
+        .movie {
+            margin: 10px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🎬 Movie Recommendation System</h1>
+
+<input type="text" id="movieInput" placeholder="Enter movie name">
+<br>
+<button onclick="recommend()">Search</button>
+
+<h2>Recommended Movies:</h2>
+<div id="results"></div>
+
+<script>
+const movies = [
+    { title: "Batman Begins", genre: "batman hero dark action" },
+    { title: "The Dark Knight", genre: "batman joker crime action" },
+    { title: "Superman", genre: "hero flying action" },
+    { title: "Spiderman", genre: "hero spider action" },
+    { title: "Iron Man", genre: "tech hero action" },
+    { title: "Avengers", genre: "team hero action" },
+    { title: "Joker", genre: "crime dark psychology" }
+];
+
+function recommend() {
+    let input = document.getElementById("movieInput").value.toLowerCase();
+    let resultsDiv = document.getElementById("results");
+    resultsDiv.innerHTML = "";
+
+    let found = movies.find(m => m.title.toLowerCase().includes(input));
+
+    if (!found) {
+        resultsDiv.innerHTML = "<p>❌ Movie not found</p>";
+        return;
+    }
+
+    let inputWords = found.genre.split(" ");
+
+    let scores = movies.map(movie => {
+        let words = movie.genre.split(" ");
+        let common = words.filter(w => inputWords.includes(w));
+        return { title: movie.title, score: common.length };
+    });
+
+    scores.sort((a, b) => b.score - a.score);
+
+    scores.slice(1, 6).forEach(m => {
+        let div = document.createElement("div");
+        div.className = "movie";
+        div.innerText = m.title;
+        resultsDiv.appendChild(div);
+    });
+}
+</script>
+
+</body>
+</html>
